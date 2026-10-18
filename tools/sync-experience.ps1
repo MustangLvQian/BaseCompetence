@@ -95,6 +95,10 @@ if (Test-Path $list) {
   foreach ($proj in @(Get-Content $list -Encoding UTF8 | Where-Object { $_ })) {
     if (-not (Test-Path $proj -PathType Container)) { $summary += "    跳过（路径不存在）：$proj"; continue }
     & powershell -NoProfile -ExecutionPolicy Bypass -File $boot -Target $proj -NoUpdate *>&1 | Out-Null
+    $projList = Join-Path $kit ("skills\projects\" + (Split-Path $proj -Leaf) + '.txt')
+    if (Test-Path $projList) {
+      & powershell -NoProfile -ExecutionPolicy Bypass -File (Join-Path $kit 'tools\install-project-skills.ps1') -Target $proj -List $projList *>&1 | Out-Null
+    }
     $ok++
   }
   $summary += "项目：已刷新 $ok 个"
