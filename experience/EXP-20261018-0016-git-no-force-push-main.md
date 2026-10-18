@@ -4,6 +4,7 @@ title: 多台电脑共用一个 Git 仓库：禁止 force push main，拉取一�
 tags: [git, workflow, multi-machine]
 severity: high
 status: active
+guard: G-0016
 seen: 1
 source: YingChuangXingQiu WF-01 / docs/git-workflow.md
 created: 2026-10-18
@@ -20,4 +21,4 @@ created: 2026-10-18
 - 禁止 `git push --force` 到 main
 - 网络不通时先本地提交，网络恢复后再推送
 
-**守卫**：`manual`：在仓库设置里开启 main 分支保护，禁止强推。每台电脑运行 `git config pull.rebase true`。
+**守卫**：`G-0016`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

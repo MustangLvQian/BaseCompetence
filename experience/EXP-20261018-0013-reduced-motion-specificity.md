@@ -4,6 +4,7 @@ title: prefers-reduced-motion 覆写的选择器特异度必须不低于被覆�
 tags: [css, accessibility, reduced-motion, specificity]
 severity: medium
 status: active
+guard: none
 seen: 1
 source: YingChuangXingQiu WEB-01
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：覆写选择器的特异度要大于或等于被覆盖的规则。写覆写时，逐条对照原规则的选择器。
 
-**守卫**：`manual`：写覆写时对照检查。Playwright 测试中用 `reduced_motion="reduce"` 验证位移为 0。
+**守卫**：`none`。不能自动检查，靠上面的规则人工遵守；不要把它当成已强制执行的规则。

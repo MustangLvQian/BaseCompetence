@@ -4,6 +4,7 @@ title: PWA 导航请求必须 network-first，不能 cache-first
 tags: [pwa, service-worker, cache, deploy]
 severity: high
 status: active
+guard: G-0001
 seen: 1
 source: YingChuangXingQiu PWA-02
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：导航请求（`request.mode === 'navigate'`）一律 network-first，失败再回落缓存。只有带哈希的静态资源才用 cache-first。
 
-**守卫**：`✅ 自动`（YingChuangXingQiu）`npm run check`，断言 navigate 分支存在。
+**守卫**：`G-0001`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

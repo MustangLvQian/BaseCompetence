@@ -4,6 +4,7 @@ title: 新版本就绪后只在空闲时应用，不能立刻 reload
 tags: [pwa, service-worker, ux]
 severity: medium
 status: active
+guard: none
 seen: 1
 source: YingChuangXingQiu PWA-03
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：更新只在空闲状态（没有在读、说、写）时应用。
 
-**守卫**：`manual`：改 SW 更新路径时，人工核对空闲条件。
+**守卫**：`none`。不能自动检查，靠上面的规则人工遵守；不要把它当成已强制执行的规则。

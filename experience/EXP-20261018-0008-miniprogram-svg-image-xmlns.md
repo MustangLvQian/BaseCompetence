@@ -4,6 +4,7 @@ title: SVG 放进小程序 <image> 必须带 xmlns 和 width/height，否则静�
 tags: [miniprogram, svg, image, xml]
 severity: high
 status: active
+guard: G-0008
 seen: 1
 source: YingChuangXingQiu MP-03
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：小程序的 SVG 资源必须自带 `xmlns`、`width`、`height` 和 `viewBox`。
 
-**守卫**：`✅ 自动`（YingChuangXingQiu）`check-templates.cjs` 扫描 `assets/**.svg`。
+**守卫**：`G-0008`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

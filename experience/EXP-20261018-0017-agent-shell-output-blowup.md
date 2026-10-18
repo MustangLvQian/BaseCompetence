@@ -4,6 +4,7 @@ title: Agent 用 Get-ChildItem -Recurse 扫整个项目会刷爆上下文，必�
 tags: [agent, token, shell, powershell]
 severity: medium
 status: active
+guard: none
 seen: 1
 source: 本次发现（审查英创项目文件时）
 created: 2026-10-18
@@ -25,4 +26,4 @@ created: 2026-10-18
 Get-ChildItem -Recurse -File | Where-Object { $_.FullName -notmatch '\\(node_modules|dist|\.git)\\' -and $_.Extension -in '.md','.json' }
 ```
 
-**守卫**：`manual`：可以在 `AGENTS.base.md` 的 Token 节省一节里保持这条规则。
+**守卫**：`none`。不能自动检查，靠上面的规则人工遵守；不要把它当成已强制执行的规则。

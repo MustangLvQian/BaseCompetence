@@ -4,6 +4,7 @@ title: skill 的 frontmatter name 与文件夹名不一致时，路由表要写 
 tags: [skills, opencode, routing, frontmatter]
 severity: medium
 status: active
+guard: G-0018
 seen: 1
 source: 本次发现（英创项目 tools/skills/install.ps1 误报）
 created: 2026-10-18
@@ -20,4 +21,4 @@ created: 2026-10-18
 - 校验时两种名字都认（`check-skills.cjs` 已经这样处理）
 - 不要因为文件夹名和 name 不一致就判定 skill 损坏
 
-**守卫**：`✅ 自动`（BaseCompetence）`node tools/check-skills.cjs --file AGENTS.md`，报告路由表里找不到的名字。
+**守卫**：`G-0018`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

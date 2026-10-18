@@ -4,6 +4,7 @@ title: 中文字的 line-height 要至少 1.35，否则上下被裁掉
 tags: [css, cjk, typography, overflow]
 severity: medium
 status: active
+guard: G-0012
 seen: 1
 source: YingChuangXingQiu WEB-02
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：含中文的行盒，`line-height` 取 1.35 或更大。
 
-**守卫**：`manual`：写含中文的按钮和标题样式时检查。能用截图验证的，用截图确认。
+**守卫**：`G-0012`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

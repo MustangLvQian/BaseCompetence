@@ -4,6 +4,7 @@ title: Playwright 测试动画页面必须设置 reduced_motion，否则定位�
 tags: [playwright, testing, animation, reduced-motion]
 severity: high
 status: active
+guard: G-0011
 seen: 2
 source: YingChuangXingQiu WEB-03
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：`browser.new_context(reduced_motion="reduce")`。本机没有 Chromium 时，用系统 Edge：`p.chromium.launch(channel="msedge")`。
 
-**守卫**：`✅ 自动`（YingChuangXingQiu）`ycx-verify` skill 和 `tools/shoot_screens.py` 已经固定这两个参数。在新项目里，把它写进测试的公共 fixture。
+**守卫**：`G-0011`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

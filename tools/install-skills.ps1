@@ -1,11 +1,6 @@
 ﻿<#
 .SYNOPSIS
-  安装本套配置依赖的 skill 到 ~/.agents/skills。已存在的 skill 不覆盖。
-
-.DESCRIPTION
-  opencode 会自动加载 ~/.agents/skills 下每个合法的 SKILL.md。
-  这里的清单来自英创星球项目已经确认的集合。要增删 skill，只改下面的 $Wanted。
-  仓库通过 SSH 克隆（国内网络 https 常超时）。
+  按 skills/wanted.txt 安装缺失的 skill 到 ~/.agents/skills。已存在的保留。
 
 .EXAMPLE
   powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\install-skills.ps1
@@ -15,56 +10,37 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+$kit = Split-Path -Parent $PSScriptRoot
 $dest = Join-Path $HOME '.agents\skills'
 $sources = Join-Path $env:TEMP 'opencode\agent-skill-sources'
+$list = Join-Path $kit 'skills\wanted.txt'
 
-function Write-Step($m) { Write-Host "==> $m" -ForegroundColor Cyan }
 function Write-Done($m) { Write-Host "    $m" -ForegroundColor Green }
 function Write-Skip($m) { Write-Host "    $m" -ForegroundColor DarkGray }
 
-# 仓库、子目录、需要的 skill 名（与目录名一致）
-$Wanted = @(
-  @{ Repo = 'emilkowalski/skills'; Sub = 'skills'; Skills = @(
-      'emil-design-eng', 'animate', 'review-animations', 'improve-animations',
-      'find-animation-opportunities', 'animation-performance',
-      'animation-vocabulary', 'apple-design', 'mobile-native', 'break-ui',
-      'pick-ui-library'
-  ) },
-  @{ Repo = 'anthropics/skills'; Sub = 'skills'; Skills = @(
-      'webapp-testing', 'skill-creator'
-  ) }
-)
+$entries = @(Get-Content $list | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object {
+  $parts = $_.Trim() -split '\s+'
+  [pscustomobject]@{ Repo = $parts[0]; Path = $parts[1]; Name = Split-Path $parts[1] -Leaf }
+})
 
-Write-Step "准备源码：$sources"
-New-Item -ItemType Directory -Force -Path $sources | Out-Null
-New-Item -ItemType Directory -Force -Path $dest | Out-Null
-
+New-Item -ItemType Directory -Force -Path $sources, $dest | Out-Null
 $prev = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
-foreach ($entry in $Wanted) {
-  $target = Join-Path $sources ($entry.Repo -replace '/', '_')
-  if (Test-Path (Join-Path $target '.git')) { Write-Skip "已有源码：$($entry.Repo)"; continue }
-  git clone --depth 1 --quiet "git@github.com:$($entry.Repo).git" $target 2>&1 | Out-Null
-  if (-not (Test-Path (Join-Path $target '.git'))) {
-    $ErrorActionPreference = $prev
-    throw "无法克隆 $($entry.Repo)。请确认 SSH 已能访问 github.com（ssh -T git@github.com）。"
-  }
-  Write-Done "已克隆：$($entry.Repo)"
+foreach ($repo in ($entries.Repo | Sort-Object -Unique)) {
+  $dir = Join-Path $sources ($repo -replace '/', '_')
+  if (Test-Path (Join-Path $dir '.git')) { continue }
+  git clone --depth 1 --quiet "git@github.com:$repo.git" $dir 2>&1 | Out-Null
+  if (-not (Test-Path (Join-Path $dir '.git'))) { $ErrorActionPreference = $prev; throw "无法克隆 $repo（请确认 ssh -T git@github.com 可用）" }
 }
 $ErrorActionPreference = $prev
 
-Write-Step "安装到 $dest"
-foreach ($entry in $Wanted) {
-  $src = Join-Path $sources ($entry.Repo -replace '/', '_')
-  foreach ($name in $entry.Skills) {
-    $from = Join-Path $src (Join-Path $entry.Sub $name)
-    $to = Join-Path $dest $name
-    if (-not (Test-Path (Join-Path $from 'SKILL.md'))) { Write-Warning "上游缺少 $name，已跳过"; continue }
-    if (Test-Path $to) { Write-Skip "已存在，保留：$name"; continue }
-    Copy-Item -Recurse $from $to
-    Write-Done "已安装：$name"
-  }
+foreach ($e in $entries) {
+  $to = Join-Path $dest $e.Name
+  if (Test-Path (Join-Path $to 'SKILL.md')) { Write-Skip "已存在：$($e.Name)"; continue }
+  $from = Join-Path $sources (Join-Path ($e.Repo -replace '/', '_') $e.Path)
+  if (-not (Test-Path (Join-Path $from 'SKILL.md'))) { Write-Warning "上游缺少 $($e.Path)，已跳过"; continue }
+  Copy-Item -Recurse $from $to
+  Write-Done "已安装：$($e.Name)"
 }
 
-Write-Host ''
-Write-Host '完成。skill 在 opencode 启动时加载，请重启 opencode 后生效。' -ForegroundColor Cyan
+Write-Host '完成。skill 在 opencode 启动时加载，需要重启 opencode 生效。' -ForegroundColor Cyan

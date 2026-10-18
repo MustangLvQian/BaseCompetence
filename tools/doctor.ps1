@@ -63,11 +63,7 @@ if (Get-ScheduledTask -TaskName 'BaseCompetence-Sync' -ErrorAction SilentlyConti
 }
 
 # 6. skill：清单中的每个名字都要在 ~/.agents/skills 下有有效的 SKILL.md
-$installScript = Join-Path $kit 'tools\install-skills.ps1'
-$wantedText = Get-Content $installScript -Raw
-$wanted = [regex]::Matches($wantedText, '(?s)Skills = @\((.*?)\)') | ForEach-Object {
-  [regex]::Matches($_.Groups[1].Value, "'([a-z][a-z0-9-]+)'") | ForEach-Object { $_.Groups[1].Value }
-}
+$wanted = @(Get-Content (Join-Path $kit 'skills\wanted.txt') | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object { Split-Path ($_.Trim() -split '\s+')[1] -Leaf })
 $skillRoot = Join-Path $HOME '.agents\skills'
 $missing = @($wanted | Where-Object { -not (Test-Path (Join-Path $skillRoot "$_\SKILL.md")) })
 if ($missing.Count -eq 0) {
@@ -89,6 +85,12 @@ if ($pyOk) {
 }
 $edge = @("$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe", "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe") | Where-Object { Test-Path $_ } | Select-Object -First 1
 if ($edge) { Pass 'Microsoft Edge 可用（Playwright 用 channel="msedge"）' } else { Warn '未找到 Microsoft Edge：浏览器测试需要其他浏览器' }
+
+# 9. 守卫与经验引用自检
+if ($node) {
+  $guardCheck = (node (Join-Path $kit 'tools\run-guards.cjs') --self-check 2>&1) | Out-String
+  if ($LASTEXITCODE -eq 0) { Pass '守卫自检通过' } else { Fail "守卫自检失败：$($guardCheck.Trim())" }
+}
 
 Write-Host ''
 Write-Host "结果：$script:fails 项失败，$script:warns 项警告" -ForegroundColor Cyan

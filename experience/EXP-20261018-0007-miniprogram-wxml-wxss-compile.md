@@ -4,6 +4,7 @@ title: 小程序 WXML/WXSS 只有开发者工具才会编译，node --check 看�
 tags: [miniprogram, wxml, wxss, lint]
 severity: medium
 status: active
+guard: G-0007
 seen: 2
 source: YingChuangXingQiu MP-02
 created: 2026-10-18
@@ -19,4 +20,4 @@ created: 2026-10-18
 
 **规则**：改完 wxml 或 wxss 后，必须跑模板检查脚本，不要等开发者工具才发现。
 
-**守卫**：`✅ 自动`（YingChuangXingQiu）`cd wechat-miniprogram; npm run check`，由 `check-templates.cjs` 检查两种错误。
+**守卫**：`G-0007`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

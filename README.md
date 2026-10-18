@@ -1,79 +1,58 @@
 # BaseCompetence：Agent 通用配置包
 
-把跨项目的经验打包成一套配置：会话连续性、任务去重、踩坑守卫、skill 路由检查、token 节省与 git 安全规则。
+跨项目的经验、守卫和 skill 清单，托管在 GitHub，多台电脑共享。
 
 ## 第一次使用：只要一句话
 
-1. 克隆配置包（SSH 推荐，国内网络 https 常超时）：
+```powershell
+git clone git@github.com:MustangLvQian/BaseCompetence.git D:\BaseCompetence
+```
 
-   ```powershell
-   git clone git@github.com:MustangLvQian/BaseCompetence.git D:\BaseCompetence
-   ```
+然后对 Agent 说：「读 `D:\BaseCompetence\AGENTS.md`，并完成里面的所有任务。」
 
-2. 打开你的 Agent（opencode），对它说：
-
-   > 读 `D:\BaseCompetence\AGENTS.md`，并完成里面的所有任务。
-
-Agent 会自己检查环境、补装依赖、安装全局规则和 skill、验证结果，最后给你一份报告。它只会在以下情况停下来问你：
-
-- 需要把 SSH 公钥添加到 GitHub
-- 要不要接入某个项目（需要你给路径）
-- 结束时提醒你重启 opencode
-
-## 目录结构
+## 它包含什么
 
 | 路径 | 作用 |
 |---|---|
-| `AGENTS.md` | **Agent 的安装任务清单**，第一次使用从这里开始 |
-| `AGENTS.base.md` | 通用规则。安装后作为全局规则，也会复制进各项目 |
-| `bootstrap.ps1` | 安装全局规则，或把通用文件接入某个项目 |
-| `tools/doctor.ps1` | 环境体检，只读，不修改任何东西 |
-| `tools/install-skills.ps1` | 安装依赖的 skill 到 `~\.agents\skills`，已存在的保留 |
-| `tools/check-skills.cjs` | 检查项目 AGENTS.md 里的 skill 路由表是否都存在 |
-| `templates/pitfalls.md` | 踩坑登记表模板 → 项目 `docs/pitfalls.md` |
-| `templates/handoff.md` | 交接手册模板 → 项目 `docs/handoff.md` |
-| `templates/task-log.md` | 任务日志模板 → 项目 `docs/task-log.md` |
+| `AGENTS.md` | Agent 的安装任务清单（第一次用这个） |
+| `AGENTS.base.md` | 通用规则：遇到问题先搜经验库、会话连续性、守卫、skill、token 节省。作为全局规则安装，也会托管到各项目 |
+| `experience/` | 经验库，一条经验一个文件（`EXP-*.md`），`find-experience.cjs` 搜索 |
+| `guards/guards.cjs` | 守卫：真正会执行的检查代码，编号与经验的 `guard:` 字段对应 |
+| `skills/wanted.txt` | skill 清单（仓库 + 目录），所有电脑同步到同一份 |
+| `tools/run-guards.cjs` | 运行守卫。由 git 钩子调用，只检查改动的文件，只输出违规行 |
+| `tools/find-experience.cjs` | 搜索经验库，只输出摘要 |
+| `tools/sync-experience.ps1` | 同步：提交本机改动 → 拉取 → 推送 → 刷新全局规则和已登记的项目 |
+| `tools/install-sync-task.ps1` | 注册计划任务，登录时和每 4 小时同步一次 |
+| `tools/install-skills.ps1` | 按 `wanted.txt` 安装缺失的 skill |
+| `tools/add-skill.ps1` / `remove-skill.ps1` | 添加或删除一个 skill，并更新清单 |
+| `tools/doctor.ps1` | 环境体检，只读 |
+| `bootstrap.ps1` | 安装全局规则，或接入项目（托管文件、用户文件、守卫钩子） |
+| `templates/` | 项目的 `docs/pitfalls.md`、`handoff.md`、`task-log.md` 模板 |
 
-## 手动使用（不经过 Agent）
+## 守卫是怎么执行的
 
-全部命令都可以手动执行，`<KIT>` 代表 `D:\BaseCompetence`：
+- 接入项目时，`bootstrap.ps1` 在项目的 `.git/hooks` 安装 pre-commit 和 pre-push 钩子
+- pre-commit 运行 `run-guards.cjs --staged`，只检查暂存的文件
+- pre-push 拒绝强制推送 main
+- 违规时提交失败；不要用 `--no-verify` 绕过
+- 每次提交还会自检经验库：经验引用的守卫必须存在
 
-```powershell
-# 环境体检
-powershell -ExecutionPolicy Bypass -File <KIT>\tools\doctor.ps1
+## 每台电脑要做的事
 
-# 安装 skill
-powershell -ExecutionPolicy Bypass -File <KIT>\tools\install-skills.ps1
+1. 克隆配置包（上面一句）
+2. 让 Agent 读 `AGENTS.md`，它会完成体检、全局规则、skill、同步任务
+3. 需要接入的项目，告诉 Agent 路径，或手动运行：
+   `powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1 -Target <项目路径>`
 
-# 安装全局规则（所有项目生效，已有文件会备份）
-powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1 -Global
+## 经验同步
 
-# 接入某个项目（已有的文件不覆盖）
-powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1 -Target D:\某个项目
-
-# 在项目目录里直接运行，等同于 -Target 当前目录
-cd D:\某个项目
-powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1
-```
-
-`bootstrap.ps1` 的参数：
-
-| 参数 | 说明 |
-|---|---|
-| `-Target <路径>` | 要接入的项目目录；不给时，若没有 `-Global` 则用当前目录 |
-| `-Global` | 安装全局规则到 `~\.config\opencode\AGENTS.md` |
-| `-NoUpdate` | 不尝试更新配置包 |
-
-## 更新
-
-配置包有改动时，在 `D:\BaseCompetence` 里提交并推送。这台电脑下次运行 `bootstrap.ps1` 或让 Agent 读 `AGENTS.md` 时会自动拉取。**已经接入的项目文件不会被覆盖**，需要手动对比合并。
+- 会话开始时，Agent 运行 `sync-experience.ps1`
+- 计划任务每 4 小时运行一次同步
+- 同步只提交 `experience/`、`guards/`、`skills/`、`AGENTS.base.md` 的改动。其他文件有未提交改动时，同步会停止，避免误提交
+- 拉取冲突时自动中止 rebase，本地内容保留
 
 ## 前提
 
 - Windows PowerShell 5.1 或 PowerShell 7
-- git（必需）、node（推荐）、python（可选，用于 Playwright）
-- GitHub SSH 认证（用于克隆和安装 skill）。国内网络 https 常超时，所以使用 SSH
-
-## 来源
-
-规则提炼自英创星球项目（`D:\LvQian\YingChuangXingQiu`）的 `AGENTS.md`、`docs/pitfalls.md`、`docs/handoff.md`、`docs/git-workflow.md`、`tools/skills/install.ps1` 以及 `ycx-verify` skill。业务细节（题库、音频、小程序）没有放进来。
+- git（必需）、node（守卫和搜索工具需要）
+- GitHub SSH 认证（克隆、同步、安装 skill 需要）。国内网络 https 常超时，所以使用 SSH

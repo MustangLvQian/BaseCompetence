@@ -33,11 +33,13 @@ Select-String -Path "<KIT>\experience\*.md" -Pattern "tags:.*pwa" -List | Select
 
 ## 守卫怎么写
 
-- `✅ 自动`：给出命令，例如 `npm run check`
-- `◐ 半自动`：说明检查覆盖哪一部分
-- `manual`：写清人工检查步骤
+守卫是 `guards/guards.cjs` 里的一段真实检查代码，由 git 钩子执行，违规时提交会被拒绝。文字说明不算守卫。
 
-没有守卫的经验不算登记。如果项目里能写自动检查，就在项目里写，并在经验文件的 `守卫` 段写上项目名和命令。
+1. 在 `guards/guards.cjs` 里加一项：`id`（G-xxxx）、`exp`（经验编号）、`files`（哪些文件需要检查）、`check`（返回违规描述数组）
+2. 经验文件的 `guard:` 字段填这个 id
+3. 运行 `node tools/run-guards.cjs --self-check` 确认引用有效
+
+不能写成代码的，写 `guard: none`，并且正文里不要写「已强制执行」。`none` 的条目只是知识。
 
 ## 状态
 

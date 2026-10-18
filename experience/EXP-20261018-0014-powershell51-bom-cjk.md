@@ -4,6 +4,7 @@ title: Windows PowerShell 5.1 解析无 BOM 的 UTF-8 脚本时，中文字符�
 tags: [powershell, windows, encoding, utf8, bom]
 severity: high
 status: active
+guard: G-0014
 seen: 1
 source: 本次发现（BaseCompetence bootstrap.ps1 测试）
 created: 2026-10-18
@@ -19,4 +20,4 @@ created: 2026-10-18
 
 注意：控制台里显示的 `�?` 是控制台编码问题，不代表文件损坏。判断文件内容是否正确，用编辑器或 Read 工具看原文。
 
-**守卫**：`manual`：新建或修改含中文的 `.ps1` 后，用 Windows PowerShell 运行一次；必要时检查文件前三个字节是否为 `EF BB BF`。
+**守卫**：`G-0014`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

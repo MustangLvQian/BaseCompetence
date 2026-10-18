@@ -4,6 +4,7 @@ title: Windows PowerShell 5.1 会吞掉传给原生程序的空字符串参数�
 tags: [powershell, windows, ssh, native-command]
 severity: medium
 status: active
+guard: none
 seen: 1
 source: 本次发现（BaseCompetence AGENTS.md 第 2 步测试）
 created: 2026-10-18
@@ -24,4 +25,4 @@ $psi.UseShellExecute = $false
 $p = [System.Diagnostics.Process]::Start($psi); $p.WaitForExit()
 ```
 
-**守卫**：`manual`：写含空参数的原生命令时，先在 `Windows PowerShell` 里实际跑一次，并确认产物。
+**守卫**：`none`。不能自动检查，靠上面的规则人工遵守；不要把它当成已强制执行的规则。

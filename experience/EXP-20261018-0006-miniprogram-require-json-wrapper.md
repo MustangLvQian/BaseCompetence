@@ -4,6 +4,7 @@ title: 微信小程序 require() 不能直接加载 .json，需要 .json.js 包�
 tags: [miniprogram, wechat, require, json]
 severity: high
 status: active
+guard: G-0006
 seen: 1
 source: YingChuangXingQiu MP-01
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：每个被 `require` 的 JSON 都要有同名的 `.json.js` 包装文件。
 
-**守卫**：`✅ 自动` 扫描运行时代码里的 require，检查对应的 `.json.js` 是否存在，接进 `npm test`。
+**守卫**：`G-0006`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

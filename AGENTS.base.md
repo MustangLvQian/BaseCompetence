@@ -24,23 +24,33 @@
 - 生成类任务（音频、TTS、大模型批量输出）先检查产物是否已存在，再决定是否生成
 - 不确定某件事是否做过，先 `grep` 日志和 git log，再动手
 
-## 3. 踩坑：先查经验库，第二次出现必须留守卫
+## 3. 遇到问题：先搜经验库，再动手
 
-**动手前**，按技术栈和症状搜索经验库，不要整库读：
+遇到报错、异常行为、或要用一个不熟悉的工具时，**先搜经验库，不要先试错**。试错是最费 token 的做法。
 
 ```powershell
-Select-String -Path "{{KIT_PATH}}\experience\*.md" -Pattern "tags:.*<关键词>" -List
+node "{{KIT_PATH}}\tools\find-experience.cjs" <关键词1> <关键词2>
 ```
 
-**遇到坑时**：
+命中的条目会输出一行摘要（编号、严重度、标题、守卫、文件路径）。需要细节时，只读那一个文件。
+没有命中，再开始排查。
+
+**守卫是真正会执行的检查，不是文字提醒。**
+- 提交时 pre-commit 钩子运行守卫，只检查本次改动的文件，只输出违规行
+- 推送时 pre-push 钩子拒绝强制推送 main
+- 违规时提交会被拒绝。**不要用 `--no-verify` 绕过**；修正违规，或者说明为什么守卫误报并请用户决定
+- 经验条目的 `guard` 字段是 `none` 时，表示它不能自动检查，只是知识，不要声称已经被强制执行
+
+**解决问题后**：
 - 只属于本项目的：写进项目的 `docs/pitfalls.md`
-- 通用的（工具、框架、平台、Git、PowerShell 等）：在 `{{KIT_PATH}}\experience\` 新建一条，格式见该目录的 `_template.md`，然后运行第 8 节的同步
-- 第一次出现：修掉并登记
-- 第二次出现：必须同时补一条**自动检查**，接进项目的 check 命令；做不到自动化的，守卫写 `manual` 并写清人工步骤
-- 没有守卫的条目不算登记
+- 通用的（工具、框架、平台、Git、PowerShell 等）：在 `{{KIT_PATH}}\experience\` 新建一条（格式见 `_template.md`），能写成守卫的，在 `{{KIT_PATH}}\guards\guards.cjs` 里加一项检查，然后运行第 8 节的同步
+- 第二次出现的坑，必须有一个能执行的守卫；做不到的，写明 `guard: none`，不要伪造守卫
 
-## 4. Skill 路由
+## 4. Skill：按需搜索、安装、用完即删
 
+- 需要某种能力但本机没有对应 skill 时，先在 GitHub 搜索（`gh search repos "skill <主题>"` 或 websearch），挑一个 SKILL.md 清楚、来源可信的，读一遍 SKILL.md 再装
+- 安装：`powershell -ExecutionPolicy Bypass -File "{{KIT_PATH}}\tools\add-skill.ps1" -Repo <owner/repo> -Path <skill 目录>`。它会校验 frontmatter 并登记到 `skills/wanted.txt`，其他电脑同步后也会装上
+- **用完即删**：本次任务结束时，如果为它装的 skill 没有用上，运行 `remove-skill.ps1 -Name <名字>` 删除，并同步
 - 路由表只写**本机真实存在的 skill 名**（frontmatter 的 `name`）。新增、改名 skill 后，运行：
   ```bash
   node tools/check-skills.cjs --file AGENTS.md

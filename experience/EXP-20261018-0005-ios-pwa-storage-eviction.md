@@ -4,6 +4,7 @@ title: iOS Safari 会清空 7 天未打开的 PWA 存储
 tags: [pwa, ios, storage, offline]
 severity: medium
 status: active
+guard: none
 seen: 1
 source: YingChuangXingQiu PWA-05
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：不要把「可离线」当成数据存储。关键状态要能在下次联网时重建。
 
-**守卫**：`manual`：涉及本地持久化的功能，设计时确认数据可以从服务端恢复。
+**守卫**：`none`。不能自动检查，靠上面的规则人工遵守；不要把它当成已强制执行的规则。

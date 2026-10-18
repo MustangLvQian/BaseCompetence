@@ -107,6 +107,28 @@ if ($doProject) {
     Add-Content -Path $list -Value $Target -Encoding UTF8
     Write-Done "已登记到同步列表：$list"
   }
+
+  # 守卫钩子：提交前检查改动文件，推送前拒绝强推 main。只覆盖带本套标记的钩子，别人的钩子不动。
+  $gitDir = Join-Path $Target '.git'
+  if (Test-Path (Join-Path $gitDir 'hooks') -PathType Container) {
+    $runner = (Join-Path $kit 'tools\run-guards.cjs') -replace '\\', '/'
+    $marker = '# BaseCompetence managed hook'
+    $hooks = @{
+      'pre-commit' = "#!/bin/sh`n$marker`nexec node `"$runner`" --staged`n"
+      'pre-push'   = "#!/bin/sh`n$marker`nexec node `"$runner`" --pre-push`n"
+    }
+    foreach ($name in $hooks.Keys) {
+      $hookPath = Join-Path $gitDir "hooks\$name"
+      if ((Test-Path $hookPath) -and -not ((Get-Content $hookPath -Raw) -match [regex]::Escape($marker))) {
+        Write-Warning "已存在其他 $name 钩子，未覆盖。需要守卫时请手动合并：node `"$runner`" --staged"
+        continue
+      }
+      [IO.File]::WriteAllText($hookPath, $hooks[$name], $utf8)
+      Write-Done "已安装守卫钩子：$name"
+    }
+  } elseif (Test-Path $gitDir) {
+    Write-Warning '.git 不是目录（可能是 worktree），守卫钩子未安装'
+  }
 }
 
 # 3. 全局规则（可选）：写入 ~/.config/opencode/AGENTS.md，所有项目都会加载它

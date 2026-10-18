@@ -4,6 +4,7 @@ title: 小程序运行时代码的现代语法要对照 libVersion，真机可�
 tags: [miniprogram, wechat, syntax, compatibility]
 severity: medium
 status: active
+guard: G-0009
 seen: 1
 source: YingChuangXingQiu MP-04
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：生成运行时代码前，确认 `project.config.json` 的 `libVersion`。不确定时，用传统的 `if` 和 `&&` 写法。
 
-**守卫**：`manual`：提交前搜索 `?.` 和 `??`，并核对 `project.config.json` 的 `libVersion`。
+**守卫**：`G-0009`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。

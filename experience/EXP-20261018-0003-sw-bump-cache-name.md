@@ -4,6 +4,7 @@ title: 改了 Service Worker 行为必须同时提升 CACHE_NAME 版本
 tags: [pwa, service-worker, cache]
 severity: medium
 status: active
+guard: G-0003
 seen: 1
 source: YingChuangXingQiu PWA-04
 created: 2026-10-18
@@ -17,4 +18,4 @@ created: 2026-10-18
 
 **规则**：每次修改 SW 行为，都必须提升 `CACHE_NAME` 里的版本号。
 
-**守卫**：`✅ 自动` 检查 `CACHE_NAME` 包含数字版本，接进 check 命令。
+**守卫**：`G-0003`，由 git 钩子自动执行（见 `guards/guards.cjs`），违规时提交或推送会被拒绝。
