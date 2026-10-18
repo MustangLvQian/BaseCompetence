@@ -84,6 +84,10 @@ try {
 
 & powershell -NoProfile -ExecutionPolicy Bypass -File $boot -Global -NoUpdate *>&1 | Out-Null
 $summary += '全局规则：已刷新'
+if (Get-Command node -ErrorAction SilentlyContinue) {
+  node (Join-Path $kit 'tools\apply-labels.cjs') *>&1 | Out-Null
+  $summary += 'skill 短标签：已应用'
+}
 
 $list = Join-Path $logDir 'projects.txt'
 if (Test-Path $list) {

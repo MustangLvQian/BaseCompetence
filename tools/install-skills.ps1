@@ -43,4 +43,6 @@ foreach ($e in $entries) {
   Write-Done "已安装：$($e.Name)"
 }
 
+if (Get-Command node -ErrorAction SilentlyContinue) { node (Join-Path $kit 'tools\apply-labels.cjs') }
+
 Write-Host '完成。skill 在 opencode 启动时加载，需要重启 opencode 生效。' -ForegroundColor Cyan

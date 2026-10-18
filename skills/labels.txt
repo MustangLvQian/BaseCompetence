@@ -1,0 +1,8 @@
+# skill 短标签：替换 SKILL.md 里的 description，减少每次会话的开销。
+# 格式：<skill 名字> | <标签>。标签要包含能触发它的关键词。
+# 原文保存在同目录的 SKILL.md.orig，删掉标签行并重新同步即可恢复。
+grilling | 需求拷问：方案或需求不清楚时，逐条追问到清楚。触发词：grill、拷问、想法压力测试
+tdd | 测试先行：写功能或修 bug 时用 TDD 红-绿-重构。触发词：TDD、先写测试、red-green
+diagnosing-bugs | 排查难 bug 与性能退化。触发词：诊断、debug、报错、崩溃、变慢
+code-review | 提交前评审：按规范和需求核对改动或分支。触发词：review、代码评审、看 diff
+webapp-testing | 网页自动化测试：Playwright 打开页面、点击、截图、看控制台。触发词：页面测试、截图、E2E
