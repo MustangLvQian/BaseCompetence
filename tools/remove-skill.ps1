@@ -19,6 +19,6 @@ $to = Join-Path $HOME ".agents\skills\$Name"
 if (Test-Path $to) { Remove-Item -Recurse -Force $to; Write-Host "已删除：$to" }
 else { Write-Host "本机没有该 skill：$Name" }
 
-$kept = @(Get-Content $list | Where-Object { -not ($_ -match '^\S+\s+(\S+)$' -and (Split-Path $Matches[1] -Leaf) -eq $Name) })
+$kept = @(Get-Content $list -Encoding UTF8 | Where-Object { -not ($_ -match '^\S+\s+(\S+)$' -and (Split-Path $Matches[1] -Leaf) -eq $Name) })
 Set-Content -Path $list -Value $kept -Encoding UTF8
 Write-Host "已从清单移除：$Name。运行 sync-experience.ps1 同步到 GitHub。" -ForegroundColor Green

@@ -42,7 +42,7 @@ if (Test-Path $to) { Remove-Item -Recurse -Force $to }
 Copy-Item -Recurse $from $to
 
 $entry = "$Repo $Path"
-$existing = @(Get-Content $list)
+$existing = @(Get-Content $list -Encoding UTF8)
 if ($existing -notcontains $entry) { Add-Content -Path $list -Value $entry -Encoding UTF8 }
 
 Write-Host "已安装并登记：$name（来源 $Repo/$Path）。需要重启 opencode 生效。" -ForegroundColor Green

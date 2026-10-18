@@ -81,7 +81,7 @@ $summary += '全局规则：已刷新'
 $list = Join-Path $logDir 'projects.txt'
 if (Test-Path $list) {
   $ok = 0
-  foreach ($proj in @(Get-Content $list | Where-Object { $_ })) {
+  foreach ($proj in @(Get-Content $list -Encoding UTF8 | Where-Object { $_ })) {
     if (-not (Test-Path $proj -PathType Container)) { $summary += "    跳过（路径不存在）：$proj"; continue }
     & powershell -NoProfile -ExecutionPolicy Bypass -File $boot -Target $proj -NoUpdate *>&1 | Out-Null
     $ok++

@@ -63,7 +63,7 @@ module.exports = [
         const close = (clean.match(/\}/g) || []).length
         return open === close ? [] : [`花括号不成对：{ ${open} 个，} ${close} 个`]
       }
-      const VOID = new Set(['image', 'input', 'icon', 'progress', 'checkbox', 'radio', 'switch', 'slider', 'import', 'include', 'template', 'wxs', 'movable-area', 'map', 'canvas', 'textarea'])
+      const VOID = new Set(['image', 'input', 'icon', 'progress', 'checkbox', 'radio', 'switch', 'slider', 'import', 'include'])
       const body = t.replace(/<!--[\s\S]*?-->/g, '')
       const stack = []
       const out = []
@@ -105,12 +105,23 @@ module.exports = [
   },
   {
     id: 'G-0012', exp: 'EXP-20261018-0012',
+    // 只在「行高小于 1.35 且同一规则块带 overflow: hidden」时报错：这是中文被裁切的真实触发条件。
+    // 图标、数字这类不裁切的样式不报。确认无需检查的规则，在块内写 /* lh-ok */。
     files: (p) => /\.(css|wxss)$/.test(p),
-    check: (p, t) => lines(t).flatMap((l, i) => {
-      const m = /line-height:\s*(\d*\.?\d+)\s*(;|\}|$)/.exec(l)
-      if (!m || /lh-ok/.test(l) || Number(m[1]) >= 1.35) return []
-      return [`第${i + 1}行 line-height: ${m[1]} 小于 1.35，中文会被裁切（确无中文时写 /* lh-ok */）`]
-    }),
+    check: (p, t) => {
+      const clean = t.replace(/\/\*(?!\s*lh-ok\s*\*\/)[\s\S]*?\*\//g, '')
+      const out = []
+      const re = /([^{}]+)\{([^{}]*)\}/g
+      let m
+      while ((m = re.exec(clean))) {
+        const body = m[2]
+        const lh = /line-height:\s*(\d*\.?\d+)\s*(;|$)/.exec(body)
+        if (!lh || Number(lh[1]) >= 1.35) continue
+        if (!/overflow\s*:\s*hidden/.test(body) || /lh-ok/.test(body)) continue
+        out.push(`选择器「${m[1].trim().split(/\s+/).pop()}」line-height ${lh[1]} 且 overflow: hidden，中文会被裁切`)
+      }
+      return out
+    },
   },
   {
     id: 'G-0014', exp: 'EXP-20261018-0014',

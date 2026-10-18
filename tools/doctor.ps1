@@ -63,7 +63,7 @@ if (Get-ScheduledTask -TaskName 'BaseCompetence-Sync' -ErrorAction SilentlyConti
 }
 
 # 6. skill：清单中的每个名字都要在 ~/.agents/skills 下有有效的 SKILL.md
-$wanted = @(Get-Content (Join-Path $kit 'skills\wanted.txt') | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object { Split-Path ($_.Trim() -split '\s+')[1] -Leaf })
+$wanted = @(Get-Content (Join-Path $kit 'skills\wanted.txt') -Encoding UTF8 | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object { Split-Path ($_.Trim() -split '\s+')[1] -Leaf })
 $skillRoot = Join-Path $HOME '.agents\skills'
 $missing = @($wanted | Where-Object { -not (Test-Path (Join-Path $skillRoot "$_\SKILL.md")) })
 if ($missing.Count -eq 0) {

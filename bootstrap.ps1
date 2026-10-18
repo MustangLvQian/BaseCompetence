@@ -102,7 +102,7 @@ if ($doProject) {
   $listDir = Join-Path $env:LOCALAPPDATA 'BaseCompetence'
   $list = Join-Path $listDir 'projects.txt'
   New-Item -ItemType Directory -Force -Path $listDir | Out-Null
-  $known = if (Test-Path $list) { @(Get-Content $list) } else { @() }
+  $known = if (Test-Path $list) { @(Get-Content $list -Encoding UTF8) } else { @() }
   if ($known -notcontains $Target) {
     Add-Content -Path $list -Value $Target -Encoding UTF8
     Write-Done "已登记到同步列表：$list"

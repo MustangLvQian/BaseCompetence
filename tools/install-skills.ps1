@@ -18,7 +18,7 @@ $list = Join-Path $kit 'skills\wanted.txt'
 function Write-Done($m) { Write-Host "    $m" -ForegroundColor Green }
 function Write-Skip($m) { Write-Host "    $m" -ForegroundColor DarkGray }
 
-$entries = @(Get-Content $list | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object {
+$entries = @(Get-Content $list -Encoding UTF8 | Where-Object { $_ -and $_ -notmatch '^\s*#' } | ForEach-Object {
   $parts = $_.Trim() -split '\s+'
   [pscustomobject]@{ Repo = $parts[0]; Path = $parts[1]; Name = Split-Path $parts[1] -Leaf }
 })

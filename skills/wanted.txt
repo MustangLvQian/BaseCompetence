@@ -1,4 +1,4 @@
-# 本套配置使用的 skill 清单。每行：<GitHub 仓库> <仓库内 skill 目录>
+﻿# 本套配置使用的 skill 清单。每行：<GitHub 仓库> <仓库内 skill 目录>
 # Agent 通过 tools/add-skill.ps1 添加，通过 tools/remove-skill.ps1 删除，不要手改后不同步。
 # 安装到 ~/.agents/skills，同步到所有电脑。
 emilkowalski/skills skills/emil-design-eng
