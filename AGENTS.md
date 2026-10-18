@@ -91,6 +91,18 @@ powershell -ExecutionPolicy Bypass -File "<KIT>\bootstrap.ps1" -Global -NoUpdate
 - 如果该文件已存在且内容不同，脚本会先备份为 `AGENTS.md.bak-<时间戳>`，并在输出里报告备份路径
 - 本步骤不会修改任何项目，只有加 `-Target` 才会写项目
 
+## 第 4b 步：经验同步
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "<KIT>\tools\install-sync-task.ps1"
+powershell -ExecutionPolicy Bypass -File "<KIT>\tools\sync-experience.ps1"
+```
+
+- 第一条注册 Windows 计划任务 `BaseCompetence-Sync`：登录时同步，之后每 4 小时同步
+- 第二条立即同步一次：提交本机经验、拉取别人的经验、推送、刷新全局规则和已登记的项目
+- 同步输出里如果有「拉取冲突」，说明 rebase 已中止、本地内容保留，把原文告诉用户，不要自行强制覆盖
+- 同步日志在 `%LOCALAPPDATA%\BaseCompetence\sync.log`
+
 ## 第 5 步：项目接入（需要用户给路径）
 
 先问用户一次：「要接入哪些项目？请给出路径。没有的话我就跳过。」
@@ -137,3 +149,5 @@ skill       <N> 个已就位，本次新装 <列表或无>
 ## 以后再次使用
 
 用户再次说「读 AGENTS.md」时，同样从第 0 步开始。所有脚本都是幂等的，重复运行只会补齐缺的东西。
+
+**已接入的项目**（`%LOCALAPPDATA%\BaseCompetence\projects.txt` 里登记的路径）会由同步任务自动更新托管文件。新增项目时，只有通过 `bootstrap.ps1 -Target` 接入才会被登记，直接复制文件不会。

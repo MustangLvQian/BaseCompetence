@@ -46,13 +46,20 @@ if ($sshOut -match 'successfully authenticated') {
 
 # 5. 全局规则
 $gfile = Join-Path $HOME '.config\opencode\AGENTS.md'
-$gsrc = Join-Path $kit 'AGENTS.base.md'
+$rendered = ([IO.File]::ReadAllText((Join-Path $kit 'AGENTS.base.md'), [Text.Encoding]::UTF8)).Replace('{{KIT_PATH}}', $kit)
 if (-not (Test-Path $gfile)) {
   Fail "全局规则未安装：$gfile。运行 bootstrap.ps1 -Global"
-} elseif ((Get-FileHash $gfile).Hash -eq (Get-FileHash $gsrc).Hash) {
+} elseif ([IO.File]::ReadAllText($gfile, [Text.Encoding]::UTF8) -eq $rendered) {
   Pass '全局规则与配置包一致'
 } else {
-  Warn "全局规则存在但与配置包不一致：$gfile（可能是旧版或被手动改过）"
+  Warn "全局规则与配置包不一致：$gfile。运行 bootstrap.ps1 -Global 更新（会先备份）"
+}
+
+# 5b. 经验同步计划任务
+if (Get-ScheduledTask -TaskName 'BaseCompetence-Sync' -ErrorAction SilentlyContinue) {
+  Pass '经验同步计划任务已注册'
+} else {
+  Warn '经验同步计划任务未注册。运行 tools\install-sync-task.ps1 以每 4 小时自动同步'
 }
 
 # 6. skill：清单中的每个名字都要在 ~/.agents/skills 下有有效的 SKILL.md
