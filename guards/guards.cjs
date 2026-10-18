@@ -156,7 +156,7 @@ module.exports = [
   },
   {
     id: 'G-0018', exp: 'EXP-20261018-0018',
-    files: (p) => /(^|\/)AGENTS\.md$/.test(norm(p)),
+    files: (p) => /(^|\/)(AGENTS|AGENTS\.base)\.md$/.test(norm(p)),
     check: (p) => {
       const checker = path.join(__dirname, '..', 'tools', 'check-skills.cjs')
       try {

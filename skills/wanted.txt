@@ -1,6 +1,44 @@
-﻿# 本套配置使用的 skill 清单。每行：<GitHub 仓库> <仓库内 skill 目录>
-# Agent 通过 tools/add-skill.ps1 添加，通过 tools/remove-skill.ps1 删除，不要手改后不同步。
-# 安装到 ~/.agents/skills，同步到所有电脑。
+﻿# 必备 skill：mattpocock/skills 全系列（engineering、productivity、misc、in-progress）。
+# 每行：<GitHub 仓库> <仓库内 skill 目录>。Agent 通过 tools/add-skill.ps1 添加，通过 tools/remove-skill.ps1 删除。
+# 安装到 ~/.agents/skills，同步到所有电脑。在 AGENTS.base.md 第 4 节有按需求选择的路由。
+mattpocock/skills skills/engineering/ask-matt
+mattpocock/skills skills/engineering/code-review
+mattpocock/skills skills/engineering/codebase-design
+mattpocock/skills skills/engineering/diagnosing-bugs
+mattpocock/skills skills/engineering/domain-modeling
+mattpocock/skills skills/engineering/grill-with-docs
+mattpocock/skills skills/engineering/implement
+mattpocock/skills skills/engineering/implement-spec
+mattpocock/skills skills/engineering/improve-codebase-architecture
+mattpocock/skills skills/engineering/pr
+mattpocock/skills skills/engineering/prototype
+mattpocock/skills skills/engineering/research
+mattpocock/skills skills/engineering/retro
+mattpocock/skills skills/engineering/setup-matt-pocock-skills
+mattpocock/skills skills/engineering/tdd
+mattpocock/skills skills/engineering/to-spec
+mattpocock/skills skills/engineering/to-tickets
+mattpocock/skills skills/engineering/triage
+mattpocock/skills skills/engineering/wayfinder
+mattpocock/skills skills/engineering/wizard
+mattpocock/skills skills/in-progress/chief-of-staff
+mattpocock/skills skills/in-progress/claude-handoff
+mattpocock/skills skills/in-progress/loop-me
+mattpocock/skills skills/in-progress/setup-ts-deep-modules
+mattpocock/skills skills/in-progress/writing-beats
+mattpocock/skills skills/in-progress/writing-fragments
+mattpocock/skills skills/in-progress/writing-shape
+mattpocock/skills skills/misc/git-guardrails-claude-code
+mattpocock/skills skills/misc/migrate-to-shoehorn
+mattpocock/skills skills/misc/scaffold-exercises
+mattpocock/skills skills/misc/setup-pre-commit
+mattpocock/skills skills/productivity/grill-me
+mattpocock/skills skills/productivity/grilling
+mattpocock/skills skills/productivity/handoff
+mattpocock/skills skills/productivity/teach
+mattpocock/skills skills/productivity/to-questionnaire
+mattpocock/skills skills/productivity/wait-what
+mattpocock/skills skills/productivity/writing-for-agents
 emilkowalski/skills skills/emil-design-eng
 emilkowalski/skills skills/animate
 emilkowalski/skills skills/review-animations
