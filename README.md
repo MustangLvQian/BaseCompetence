@@ -1,107 +1,79 @@
 # BaseCompetence：Agent 通用配置包
 
-把跨项目的经验打包成一套配置，新项目一条命令拉取。包含：
+把跨项目的经验打包成一套配置：会话连续性、任务去重、踩坑守卫、skill 路由检查、token 节省与 git 安全规则。
 
-- 会话连续性：交接手册、任务日志，防止对话丢失后重复劳动
-- 任务去重：开工前查日志，批处理脚本要求幂等
-- 踩坑守卫：踩坑登记表，第二次出现必须补自动检查
-- skill 路由检查：确认 AGENTS.md 里引用的 skill 在本机真实存在
-- token 节省与 git 安全规则
+## 第一次使用：只要一句话
+
+1. 克隆配置包（SSH 推荐，国内网络 https 常超时）：
+
+   ```powershell
+   git clone git@github.com:MustangLvQian/BaseCompetence.git D:\BaseCompetence
+   ```
+
+2. 打开你的 Agent（opencode），对它说：
+
+   > 读 `D:\BaseCompetence\AGENTS.md`，并完成里面的所有任务。
+
+Agent 会自己检查环境、补装依赖、安装全局规则和 skill、验证结果，最后给你一份报告。它只会在以下情况停下来问你：
+
+- 需要把 SSH 公钥添加到 GitHub
+- 要不要接入某个项目（需要你给路径）
+- 结束时提醒你重启 opencode
 
 ## 目录结构
 
 | 路径 | 作用 |
 |---|---|
-| `bootstrap.ps1` | 一键脚本：拉取配置到项目；可选安装到全局 |
-| `AGENTS.base.md` | 通用规则，项目的 `AGENTS.md` 引用它 |
+| `AGENTS.md` | **Agent 的安装任务清单**，第一次使用从这里开始 |
+| `AGENTS.base.md` | 通用规则。安装后作为全局规则，也会复制进各项目 |
+| `bootstrap.ps1` | 安装全局规则，或把通用文件接入某个项目 |
+| `tools/doctor.ps1` | 环境体检，只读，不修改任何东西 |
+| `tools/install-skills.ps1` | 安装依赖的 skill 到 `~\.agents\skills`，已存在的保留 |
+| `tools/check-skills.cjs` | 检查项目 AGENTS.md 里的 skill 路由表是否都存在 |
 | `templates/pitfalls.md` | 踩坑登记表模板 → 项目 `docs/pitfalls.md` |
 | `templates/handoff.md` | 交接手册模板 → 项目 `docs/handoff.md` |
 | `templates/task-log.md` | 任务日志模板 → 项目 `docs/task-log.md` |
-| `tools/check-skills.cjs` | skill 路由检查 → 项目 `tools/check-skills.cjs` |
 
-## 前提
+## 手动使用（不经过 Agent）
 
-- **git**（必需）
-- **node**（推荐，用于 skill 路由检查；没有也能用，脚本会跳过检查）
-- 访问 GitHub 的方式二选一：
-  - SSH：`git@github.com:...`，需要本机已配置 SSH 公钥。国内网络常用这个
-  - HTTPS：`https://github.com/...`，网络不稳定时可能超时
-
-## 一键使用（任何一台电脑）
-
-### 第一次：克隆配置包
-
-SSH（推荐）：
+全部命令都可以手动执行，`<KIT>` 代表 `D:\BaseCompetence`：
 
 ```powershell
-git clone git@github.com:MustangLvQian/BaseCompetence.git D:\BaseCompetence
+# 环境体检
+powershell -ExecutionPolicy Bypass -File <KIT>\tools\doctor.ps1
+
+# 安装 skill
+powershell -ExecutionPolicy Bypass -File <KIT>\tools\install-skills.ps1
+
+# 安装全局规则（所有项目生效，已有文件会备份）
+powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1 -Global
+
+# 接入某个项目（已有的文件不覆盖）
+powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1 -Target D:\某个项目
+
+# 在项目目录里直接运行，等同于 -Target 当前目录
+cd D:\某个项目
+powershell -ExecutionPolicy Bypass -File <KIT>\bootstrap.ps1
 ```
 
-HTTPS：
-
-```powershell
-git clone https://github.com/MustangLvQian/BaseCompetence.git D:\BaseCompetence
-```
-
-### 每个新项目：一条命令
-
-在项目目录里直接运行（`-Target` 默认为当前目录）：
-
-```powershell
-cd D:\某个新项目
-powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1
-```
-
-指定项目路径：
-
-```powershell
-powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1 -Target D:\某个新项目
-```
-
-脚本会做：
-
-1. 如果配置包是 git 仓库，先 `git pull --rebase` 更新自己（离线时跳过，继续用本地版本）
-2. 把通用文件复制到项目（已存在的不覆盖）
-3. 项目没有 `AGENTS.md` 时创建一个，并引用通用规则；已有的只提示，不擅自修改
-4. 如果装了 node，运行 skill 路由检查并输出结果
-
-### 可选：安装到全局（所有项目生效）
-
-```powershell
-powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1 -Target D:\某个新项目 -Global
-```
-
-这会把 `AGENTS.base.md` 写到 `~\.config\opencode\AGENTS.md`，所有项目都会加载它。
-如果该文件已存在且内容不同，会先备份为 `AGENTS.md.bak-时间戳`。
-**全局规则会影响每个项目**，只在确定要这样做时加 `-Global`。
-
-### 参数
+`bootstrap.ps1` 的参数：
 
 | 参数 | 说明 |
 |---|---|
-| `-Target <路径>` | 目标项目目录，默认当前目录 |
-| `-Global` | 同时安装全局规则 |
-| `-NoUpdate` | 不尝试更新配置包（离线或想固定版本时用） |
+| `-Target <路径>` | 要接入的项目目录；不给时，若没有 `-Global` 则用当前目录 |
+| `-Global` | 安装全局规则到 `~\.config\opencode\AGENTS.md` |
+| `-NoUpdate` | 不尝试更新配置包 |
 
-## 换一台电脑
+## 更新
 
-1. 装好 git 和 node
-2. 按上面「第一次：克隆配置包」克隆到任意目录
-3. 对项目运行 `bootstrap.ps1`
+配置包有改动时，在 `D:\BaseCompetence` 里提交并推送。这台电脑下次运行 `bootstrap.ps1` 或让 Agent 读 `AGENTS.md` 时会自动拉取。**已经接入的项目文件不会被覆盖**，需要手动对比合并。
 
-之后每台电脑都从同一个 GitHub 仓库拉取，内容保持一致。
+## 前提
 
-## 项目接入后要做的事
-
-1. 在项目的 `docs/pitfalls.md` 里填写守卫命令表
-2. 在项目的 `AGENTS.md` 里补充技术栈、硬约束和 skill 路由表
-3. 运行 `node tools/check-skills.cjs --file AGENTS.md`，确认路由表里的名字都存在
-4. 第一个任务开始时，在 `docs/task-log.md` 建第一条记录
-
-## 更新规则
-
-配置包有改动时，在 `D:\BaseCompetence` 里提交并推送即可。各项目下次运行 `bootstrap.ps1` 时会拿到新版本，但**已存在的项目文件不会被覆盖**。如果想让某个项目同步新规则，需要手动对比后合并。
+- Windows PowerShell 5.1 或 PowerShell 7
+- git（必需）、node（推荐）、python（可选，用于 Playwright）
+- GitHub SSH 认证（用于克隆和安装 skill）。国内网络 https 常超时，所以使用 SSH
 
 ## 来源
 
-规则提炼自英创星球项目（`D:\LvQian\YingChuangXingQiu`）的 `AGENTS.md`、`docs/pitfalls.md`、`docs/handoff.md`、`docs/git-workflow.md` 以及 `ycx-verify` skill。业务细节（题库、音频、小程序）没有放进来。
+规则提炼自英创星球项目（`D:\LvQian\YingChuangXingQiu`）的 `AGENTS.md`、`docs/pitfalls.md`、`docs/handoff.md`、`docs/git-workflow.md`、`tools/skills/install.ps1` 以及 `ycx-verify` skill。业务细节（题库、音频、小程序）没有放进来。
