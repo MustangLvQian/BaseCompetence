@@ -1,0 +1,13 @@
+﻿# 英创星球项目专用 skill。只安装到该项目的 .agents/skills，不占用其他项目的开销。
+# 每行：<GitHub 仓库> <仓库内 skill 目录>。由 tools/install-project-skills.ps1 安装。
+emilkowalski/skills skills/emil-design-eng
+emilkowalski/skills skills/animate
+emilkowalski/skills skills/review-animations
+emilkowalski/skills skills/improve-animations
+emilkowalski/skills skills/find-animation-opportunities
+emilkowalski/skills skills/animation-performance
+emilkowalski/skills skills/animation-vocabulary
+emilkowalski/skills skills/apple-design
+emilkowalski/skills skills/mobile-native
+emilkowalski/skills skills/break-ui
+emilkowalski/skills skills/pick-ui-library

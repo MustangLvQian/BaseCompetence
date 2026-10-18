@@ -39,16 +39,5 @@ mattpocock/skills skills/productivity/teach
 mattpocock/skills skills/productivity/to-questionnaire
 mattpocock/skills skills/productivity/wait-what
 mattpocock/skills skills/productivity/writing-for-agents
-emilkowalski/skills skills/emil-design-eng
-emilkowalski/skills skills/animate
-emilkowalski/skills skills/review-animations
-emilkowalski/skills skills/improve-animations
-emilkowalski/skills skills/find-animation-opportunities
-emilkowalski/skills skills/animation-performance
-emilkowalski/skills skills/animation-vocabulary
-emilkowalski/skills skills/apple-design
-emilkowalski/skills skills/mobile-native
-emilkowalski/skills skills/break-ui
-emilkowalski/skills skills/pick-ui-library
 anthropics/skills skills/webapp-testing
 anthropics/skills skills/skill-creator
