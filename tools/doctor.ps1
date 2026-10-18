@@ -3,7 +3,7 @@
   检查这台电脑是否已经具备配置包的全部功能。只读，不修改任何东西。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\doctor.ps1
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\doctor.ps1
 
   退出码：有 FAIL 时为 1；只有 WARN 或全部 PASS 时为 0。
 #>
@@ -42,6 +42,14 @@ if ($sshOut -match 'successfully authenticated') {
   Pass 'GitHub SSH 已认证'
 } else {
   Fail "GitHub SSH 未认证。需要用户把公钥加到 https://github.com/settings/keys。输出：$($sshOut.Trim())"
+}
+
+# 4b. GitHub 访问路由：国内网络常见做法是把 github.com 的 SSH 指向 ssh.github.com:443（不是代理）
+$sshCfg = (ssh -G git@github.com 2>$null) | Out-String
+if ($sshCfg -match '(?m)^hostname ssh\.github\.com' -and $sshCfg -match '(?m)^port 443') {
+  Pass 'GitHub 经 ssh.github.com:443 访问'
+} else {
+  Warn '未经 443 端口访问 GitHub。若直连 22 端口不通，在 ~/.ssh/config 加入：Host github.com / HostName ssh.github.com / Port 443'
 }
 
 # 5. 全局规则

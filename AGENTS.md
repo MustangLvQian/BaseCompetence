@@ -21,8 +21,17 @@
 - 不要覆盖或删除用户已有的文件，脚本会自己备份
 - 不要 `git push --force`，不要改写历史，不要用 `--no-verify`
 - 不要生成 SSH 密钥、不要替用户执行需要管理员权限的命令
+- 不要设置 `git config basecompetence.push true`，除非用户明确说明这是他自己的配置包仓库。否则经验只留在本地，不推送到别人的仓库
 
 ## 第 0 步：更新配置包
+
+如果用户还没有克隆配置包（`<KIT>` 不存在），**需要用户**：请用户选一个自己有权限的文件夹（不要假设某个盘符存在），然后执行：
+
+```powershell
+git clone git@github.com:MustangLvQian/BaseCompetence.git "<用户选的文件夹>\BaseCompetence"
+```
+
+克隆后，把 `<KIT>` 换成实际路径，继续。已有配置包时：
 
 ```powershell
 git -C "<KIT>" pull --rebase
@@ -45,6 +54,7 @@ powershell -ExecutionPolicy Bypass -File "<KIT>\tools\doctor.ps1"
 | python 缺失（WARN） | 可选。执行 `winget install --id Python.Python.3.12 -e --silent`，失败就跳过 |
 | Playwright 未装（WARN） | 执行 `python -m pip install playwright`。**不要**执行 `playwright install chromium`，本机用系统 Edge |
 | GitHub SSH 未认证（FAIL） | 见第 2 步 |
+| GitHub 未经 443 端口访问（WARN） | **需要用户**：在 `%USERPROFILE%\.ssh\config` 加入 `Host github.com` / `HostName ssh.github.com` / `Port 443`。这是 SSH 端口路由，不是代理 |
 | skill 缺失（FAIL） | 见第 3 步 |
 | 全局规则不一致（WARN / FAIL） | 见第 4 步 |
 | 经验同步任务未注册（WARN） | 见第 4b 步 |

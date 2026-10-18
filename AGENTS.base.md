@@ -58,6 +58,7 @@ node "{{KIT_PATH}}\tools\find-experience.cjs" <关键词1> <关键词2>
 - 同一功能只保留一个 skill，避免自动选择时互相竞争
 - 不确定用哪个时，选路由表里的那一个，不要自行挑功能相近的
 - 路由表要放在标题里含 "Skill" 的章节下（如 `## Skills`），检查工具只读这些章节
+- **需求不清楚时先问，不要假设后动手**：用提问工具（如 `question`）逐条确认范围、验收标准、约束；需要系统梳理时用 `gstack-office-hours`（六个强制问题）或 `gstack-spec`。问清楚之前不要开始实现
 
 ## 5. Token 节省
 
@@ -92,7 +93,7 @@ node "{{KIT_PATH}}\tools\find-experience.cjs" <关键词1> <关键词2>
 powershell -ExecutionPolicy Bypass -File "{{KIT_PATH}}\tools\sync-experience.ps1"
 ```
 
-**会话结束前**，如果本次新增了通用经验，或修改了全局规则，运行同一条命令，把它推送出去。
+**会话结束前**，如果本次新增了通用经验，或修改了全局规则，运行同一条命令。改动会提交到本地；只有配置包所有者开启了推送（`git config basecompetence.push true`）时才会推送到 GitHub，否则输出里会说明「推送：未开启」。
 
 - 同步失败（网络、冲突）时，不要阻塞工作，在最后的报告里说明即可
 - 同步会同时刷新全局规则和已登记的项目，所以不需要手动更新各项目的 `AGENTS.base.md`

@@ -39,6 +39,16 @@ function selfCheck() {
   for (const g of guards) {
     if (!entries.some((n) => n.startsWith(g.exp))) problems.push(`守卫 ${g.id} 指向的经验 ${g.exp} 不存在`)
   }
+
+  // 防重复：守卫编号、经验编号、经验标题都必须唯一
+  const dup = (list) => list.filter((v, i) => list.indexOf(v) !== i)
+  for (const id of dup(guards.map((g) => g.id))) problems.push(`重复的守卫编号：${id}`)
+  for (const exp of dup(guards.map((g) => g.exp))) problems.push(`两个守卫指向同一条经验：${exp}（合并为一个守卫）`)
+  const titles = entries.map((f) => {
+    const m = /^title:\s*(.*)$/m.exec(fs.readFileSync(path.join(dir, f), 'utf8'))
+    return m ? m[1].trim().toLowerCase().replace(/[\s\p{P}]+/gu, '') : f
+  })
+  for (const t of dup(titles)) problems.push(`重复的经验标题：${t}（合并到已有条目，不要新建）`)
   return problems
 }
 

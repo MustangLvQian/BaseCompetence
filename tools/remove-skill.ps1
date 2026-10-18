@@ -3,7 +3,7 @@
   删除一个 skill：从 ~/.agents/skills 删除，并从 skills/wanted.txt 移除登记。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\remove-skill.ps1 -Name pdf
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\remove-skill.ps1 -Name pdf
 #>
 
 [CmdletBinding()]

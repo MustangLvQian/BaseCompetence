@@ -7,11 +7,11 @@
 
 .EXAMPLE
   # 接入项目（会登记到同步列表，之后 sync-experience.ps1 会自动更新它）
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1 -Target D:\某个项目
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\bootstrap.ps1 -Target D:\某个项目
 
 .EXAMPLE
   # 安装或更新全局规则（所有项目生效）
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\bootstrap.ps1 -Global
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\bootstrap.ps1 -Global
 #>
 
 [CmdletBinding()]

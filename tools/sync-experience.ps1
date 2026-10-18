@@ -8,7 +8,7 @@
   每次运行都会追加一行到 %LOCALAPPDATA%\BaseCompetence\sync.log。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\sync-experience.ps1
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\sync-experience.ps1
 #>
 
 [CmdletBinding()]
@@ -68,8 +68,15 @@ try {
     $summary += '拉取：没有新内容'
   }
 
-  $push = Invoke-Repo push --quiet origin HEAD:main
-  if ($push.Code -eq 0) { $summary += '推送：完成' } else { $summary += '推送失败（网络？）：本地已提交，下次同步会重试' }
+  # 推送需要明确开启：只有配置包的所有者才应该推送到自己的仓库。
+  # 其他人 fork 后，请把 origin 改成自己的仓库，再执行：git config basecompetence.push true
+  $enabled = (Invoke-Repo config --get basecompetence.push).Out
+  if ($enabled -ne 'true') {
+    $summary += '推送：未开启（git config basecompetence.push 不是 true），改动只保留在本地'
+  } else {
+    $push = Invoke-Repo push --quiet origin HEAD:main
+    if ($push.Code -eq 0) { $summary += '推送：完成' } else { $summary += '推送失败（网络？）：本地已提交，下次同步会重试' }
+  }
 } catch {
   Write-Log "同步失败：$($_.Exception.Message)"
   exit 1

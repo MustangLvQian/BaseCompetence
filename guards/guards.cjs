@@ -142,6 +142,19 @@ module.exports = [
       .map(() => '禁止强制推送 main（非快进）。请先 git pull --rebase，不要 force push'),
   },
   {
+    // 经验库可能公开，不能写个人路径、邮箱或凭据。写占位符（如 <邮箱>、<项目路径>）。
+    id: 'G-0019', exp: 'EXP-20261018-0019',
+    files: (p) => /(^|\/)experience\/EXP-.*\.md$/.test(norm(p)),
+    check: (p, t) => {
+      const rules = [
+        [/[A-Za-z]:\\(Users|LvQian)\\/, '含个人本机路径'],
+        [/[\w.+-]+@(hotmail|gmail|qq|163|outlook|foxmail)\.(com|cn)/i, '含个人邮箱'],
+        [/ghp_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,}|BEGIN (OPENSSH|RSA|EC) PRIVATE KEY/, '疑似凭据'],
+      ]
+      return rules.filter(([re]) => re.test(t)).map(([, msg]) => `${msg}，请改成占位符`)
+    },
+  },
+  {
     id: 'G-0018', exp: 'EXP-20261018-0018',
     files: (p) => /(^|\/)AGENTS\.md$/.test(norm(p)),
     check: (p) => {

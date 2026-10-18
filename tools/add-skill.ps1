@@ -3,7 +3,7 @@
   从 GitHub 仓库安装一个 skill 到 ~/.agents/skills，校验后登记到 skills/wanted.txt，让其他电脑也能同步到。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\add-skill.ps1 -Repo anthropics/skills -Path skills/pdf
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\add-skill.ps1 -Repo anthropics/skills -Path skills/pdf
 #>
 
 [CmdletBinding()]

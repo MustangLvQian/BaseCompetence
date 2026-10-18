@@ -3,8 +3,8 @@
   注册 Windows 计划任务：登录时同步一次，之后每 N 小时同步一次。重复运行会更新已有任务。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\install-sync-task.ps1
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\install-sync-task.ps1 -Hours 2
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\install-sync-task.ps1
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\install-sync-task.ps1 -Hours 2
 #>
 
 [CmdletBinding()]

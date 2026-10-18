@@ -3,7 +3,7 @@
   按 skills/wanted.txt 安装缺失的 skill 到 ~/.agents/skills。已存在的保留。
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File D:\BaseCompetence\tools\install-skills.ps1
+  powershell -ExecutionPolicy Bypass -File <配置包路径>\tools\install-skills.ps1
 #>
 
 [CmdletBinding()]
