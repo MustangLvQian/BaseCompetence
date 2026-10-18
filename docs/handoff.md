@@ -15,16 +15,17 @@
 - 动效类 11 个 skill 和 `ycx-verify` 只在英创项目的 `.agents/skills` 里
 - 英创 Agent 已按 `rules/skill-labels.md` 完成 12 个项目 skill 的打标签（有 `SKILL.md.orig` 备份）
 - 模板（`templates/`）已去掉示例行，任务日志有「token 消耗」列
+- **skill 隐藏验证通过（2026-10-18）**：新会话里可用 skill 只剩 5 个自动调用 + `opencode`/`report` 两个内置，被 deny 的（prototype、codebase-design 等）都不出现
+- **prototype 重名已解决（2026-10-18）**：用户选保留 mattpocock 版——已取消 deny（本会话已确认可用）；UI 多方案版移到 `%LOCALAPPDATA%\BaseCompetence\backup\prototype-ui-20261018`（opencode 和 Claude 目录各一份，未永久删除）
+- **标签格式已更新（2026-10-18，用户确认）**：新格式 = 英文功能句（≤5 词）+ 中文触发词（3–4 个），每条 ≤45 字符。`skills/labels.txt` 和 `rules/skill-labels.md` 已改；英创 12 个标签按新格式重做已写进英创 handoff 第 9 节
+- 开机同步：用户决定暂不处理（2026-10-18）
 
 ## 待办（按优先级）
 
-1. **用户确认英创 12 个 skill 的新标签**。已经完成，但还没有人工确认。确认后英创可以提交这些改动（建议只提交标签相关文件，不要混入其他改动）
-2. **验证隐藏生效**：开一个新会话，问 Agent「你现在能用哪些 skill」，看列表是否只剩 5 个自动 skill。没生效的话检查 `~/.config/opencode/opencode.jsonc` 的 `permission.skill`
-3. **`prototype` 重名**：全局 `~/.agents/skills` 的 mattpocock 版与 opencode、Claude 目录里的 UI 多方案版同名。需要用户决定保留哪一个
-4. **英创守卫违规（交接文档第 3 节）**：6 项路由 + 1 个 .ps1 缺 BOM + 1 个样式 + 4 处 `?.`，英创 Agent 还没有修完。修完前提交会被钩子拦下
-5. **英创路由表的 gstack 替换**（交接文档第 3.1b 节）：`investigate`→`diagnosing-bugs`，`review`→`code-review`，`qa`→`webapp-testing`
-6. **开机同步需要管理员**：当前只有每 4 小时的触发。需要的话，用管理员 PowerShell 运行 `tools\install-sync-task.ps1`
-7. **积累 token 数据**：任务日志的「token 消耗」列要坚持填。积累约 10 个任务后，再决定哪些规则留下、哪些删掉
+1. **英创 12 个 skill 标签按新格式重做**：英创 Agent 按其 handoff 第 9 节重打（英文功能句 + 中文触发词，≤45 字符）。重做后给用户确认，确认后英创只提交标签相关文件
+2. **英创守卫违规（交接文档第 3 节）**：6 项路由 + 1 个 .ps1 缺 BOM + 1 个样式 + 4 处 `?.`，英创 Agent 还没有修完。修完前提交会被钩子拦下
+3. **英创路由表的 gstack 替换**（交接文档第 3.1b 节）：`investigate`→`diagnosing-bugs`，`review`→`code-review`，`qa`→`webapp-testing`
+4. **积累 token 数据**：任务日志的「token 消耗」列要坚持填。积累约 10 个任务后，再决定哪些规则留下、哪些删掉
 
 ## 不要做的事
 
@@ -47,3 +48,4 @@
 - 不删除用户的文件，只隐藏（`permission.skill` 设为 `deny`）；删除的只有用户明确表示不要的 gstack
 - 守卫只做机械检查，不做需要判断的事（如“答错能否重选”）
 - 同步只推送到用户自己的仓库（`basecompetence.push` 开关）
+- 标签功能句用英文、触发词必须中文（2026-10-18）：中文 1 字 ≈ 1 token、英文 4 字符 ≈ 1 token，真正省钱的是缩短篇幅，不是换语言；触发词换英文会匹配不上中文提问
