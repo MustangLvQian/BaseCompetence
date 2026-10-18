@@ -1,6 +1,6 @@
 ﻿# 必备 skill：mattpocock/skills 全系列（engineering、productivity、misc、in-progress）。
 # 每行：<GitHub 仓库> <仓库内 skill 目录>。Agent 通过 tools/add-skill.ps1 添加，通过 tools/remove-skill.ps1 删除。
-# 安装到 ~/.agents/skills，同步到所有电脑。在 AGENTS.base.md 第 4 节有按需求选择的路由。
+# 安装到 ~/.agents/skills，同步到所有电脑。按需求选择的路由见 rules/routing.md。
 mattpocock/skills skills/engineering/ask-matt
 mattpocock/skills skills/engineering/code-review
 mattpocock/skills skills/engineering/codebase-design
