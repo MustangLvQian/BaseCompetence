@@ -41,3 +41,4 @@ mattpocock/skills skills/productivity/wait-what
 mattpocock/skills skills/productivity/writing-for-agents
 anthropics/skills skills/webapp-testing
 anthropics/skills skills/skill-creator
+Leonxlnx/taste-skill skills/taste-skill

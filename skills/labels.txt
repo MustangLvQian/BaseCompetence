@@ -6,3 +6,6 @@ tdd | TDD red-green-refactor. 触发词：TDD、先写测试、red-green
 diagnosing-bugs | Debug hard bugs and regressions. 触发词：诊断、debug、报错、变慢
 code-review | Pre-commit code review. 触发词：review、代码评审、看 diff
 webapp-testing | Playwright E2E and screenshots. 触发词：页面测试、截图、E2E
+design-taste-frontend | Frontend art direction, anti-slop. 触发词：落地页、别像模板、质感、界面设计
+impeccable | Polish frontend UI design. 触发词：界面微调、间距、对齐、排版
+vlmkit | Frontend VRT and layout gates. 触发词：截图还原、溢出、跑版、视觉回归
