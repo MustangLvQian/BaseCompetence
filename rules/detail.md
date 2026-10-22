@@ -10,6 +10,11 @@
 - 不重复粘贴已经在文件里的内容，引用路径和行号
 - 能用脚本验证的，先跑脚本，不要反复问模型
 - 同一问题先搜经验库，再动手
+- 一个任务一个会话：任务结束立即关闭，下一任务新开会话，靠 `docs/handoff.md` 接续。缓存读取是 token 的主要成本，会话越长每轮越贵（实测一个跨两件事的会话缓存读取 13.7M，输入仅 4.1k）
+- `docs/handoff.md` 只写当前状态、下一步、待确认；超过约 5 KB 时把历史段落移到 `docs/archive/`
+- `docs/task-log.md` 只按任务 ID 或关键词 grep，不整文件读；新任务行只写一行结果，细节放 commit 或产物文件
+- token 用量：开工运行 `node <KIT>\tools\record-usage.cjs --start <任务ID>` 记下会话 ID；任务结束后新开会话，运行 `node <KIT>\tools\record-usage.cjs <任务ID>` 写入用量。新增任务行的 token 列由守卫 G-0020 检查，不能留空
+- 项目 `AGENTS.md` 只放硬约束与路由，超过约 10 KB 时把细节移到 `docs/` 或 `rules/` 按需读取
 
 ## 验证
 

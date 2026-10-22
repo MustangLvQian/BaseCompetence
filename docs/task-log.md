@@ -21,6 +21,8 @@ ID 用 `T-YYYYMMDD-序号`。每条一行，结果要可核对（commit、文件
 | T-20261018-01 | 刷新 handoff：核对配置包与英创实际状态，记录经验按领域过滤原则、G-0018 待修 | done | 2026-10-18 | `docs/handoff.md` 已更新（最新提交核对为 `ad9e61c`；英创 4 类守卫修复记为已完成；12 标签记为等用户确认；新增待办：G-0018 误报修复、英创视觉验证遗留） | 本次会话提交 | 未知 |
 | T-20261018-02 | 修 G-0018 误报：check-skills.cjs 按列解析，「不要用」列缺失名不算 missing（方案 a，源自英创反馈） | done | 2026-10-18 | `tools/check-skills.cjs` 表头定列、豁免列用 `·` 前缀输出（不踩 G-0018 的 `  - ` 解析契约）；4 组用例通过：英创实测 exit 0、真缺名仍 exit 1、无豁免列向后兼容、仅豁免列缺失 exit 0。新增经验 EXP-20261018-0021 | `da436ec` | 未知 |
 | T-20261018-03 | handoff 瘦身：历史任务归档进本文件「补录历史」，handoff 只留现状与待办 | done | 2026-10-18 | `docs/handoff.md` 55 行 → 约 40 行；14 项历史补录到下方「补录历史」，证据不丢失（commit、备份路径均保留） | `da436ec` | 未知 |
+| T-20261022-TOKEN-RULES | 按 token 评估结论更新规则：配置包 `AGENTS.base.md`、`rules/detail.md`、`templates/task-log.md`（一任务一会话、handoff 只读现状节、task-log 只 grep、开工记会话 ID）；英创与 VoiceBuilder 项目 `AGENTS.md` 同步加入相应条款；重新生成全局规则（备份 `AGENTS.md.bak-20261022-232018`） | done | 2026-10-22 | 规则文本已改，未在新会话中验证执行效果 | — | 未知（会话 ID 未记录） |
+| T-20261022-TOKEN-RECORD | 新增 `tools/record-usage.cjs` 把用量写入任务行；新增守卫 G-0020（提交时检查新增任务行的 token 列）及经验 EXP-20261022-0022；规则文档改为使用 record-usage | done | 2026-10-22 | `tools/record-usage.cjs`、`guards/guards.cjs`、`experience/EXP-20261022-0022-*.md` | 待提交 | 未知（会话 ID 未记录） |
 
 ## 补录历史（2026-10-18 从 handoff 归档）
 

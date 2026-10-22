@@ -18,6 +18,8 @@ ID 用 `T-YYYYMMDD-序号`。每条一行，结果要可核对（commit、文件
 | ID | 任务 | 状态 | 日期 | 结果 / 产物 | commit | token 消耗 |
 |---|---|---|---|---|---|---|
 
+开工先新增本条任务行，再运行 `node <KIT>\tools\record-usage.cjs --start <任务ID>` 记下会话 ID。任务结束后新开会话，运行 `node <KIT>\tools\record-usage.cjs <任务ID>` 把用量写入「token 消耗」列（守卫 G-0020 会检查）。读本文件时只 grep 任务 ID，不整文件读
+
 ## 规则
 
 - 同一件事只开一条，不要为「重做」新建 ID；重做就把原条目改回 `todo` 并注明原因

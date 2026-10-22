@@ -155,6 +155,24 @@ module.exports = [
     },
   },
   {
+    id: 'G-0020', exp: 'EXP-20261022-0022',
+    files: (p) => /(^|\/)docs\/task-log\.md$/.test(norm(p)),
+    check: (p, t) => {
+      const before = new Set(lines(headText(p) || ''))
+      const out = []
+      for (const line of lines(t)) {
+        if (!/^\|\s*T-\d{8}/.test(line) || before.has(line)) continue
+        const id = line.split('|')[1].trim()
+        const cells = line.split('|').slice(1, -1).map((c) => c.trim())
+        if (cells.length !== 7) { out.push(`${id} 行是 ${cells.length} 列，应为 7 列（最后一列是 token 消耗）`); continue }
+        const tok = cells[6]
+        const ok = /input\s[\d,]+\s\/\soutput\s[\d,]+/.test(tok) || /^未知（[^）]+）/.test(tok)
+        if (!ok) out.push(`${id} 的 token 消耗列为空或无效：请用 tools/record-usage.cjs 填入用量，或写「未知（原因）」`)
+      }
+      return out
+    },
+  },
+  {
     id: 'G-0018', exp: 'EXP-20261018-0018',
     files: (p) => /(^|\/)(AGENTS|AGENTS\.base)\.md$/.test(norm(p)) || /(^|\/)rules\/routing\.md$/.test(norm(p)),
     check: (p) => {

@@ -3,6 +3,8 @@
 > 新会话第一句话：「读 `D:\LvQian\BaseCompetence\docs\handoff.md`，然后继续。」
 > 本文件只写现在的状态和待办。历史任务记在 `docs/task-log.md`（含「补录历史」节），细节看 git log。
 
+⚠️ **任务结束时必须关闭本会话/窗口。** 旧会话历史每次交互都重复计费，跨会话上下文靠 `docs/handoff.md` 传递，不靠留着旧会话。
+
 **最后更新：** 2026-10-18（晚）　**配置包最新提交：** `da436ec`（之后仅本次补号提交，工作区干净）
 
 ## 当前状态
@@ -13,6 +15,7 @@
 - 全局 skill：自动调用只有 5 个（`grilling`、`tdd`、`diagnosing-bugs`、`code-review`、`webapp-testing`），约 66 token；隐藏靠 `permission.skill: deny`，已验证有效
 - 标签新格式（用户已确认）：英文功能句（≤5 词）+ 中文触发词（3–4 个），每条 ≤45 字符，见 `skills/labels.txt`、`rules/skill-labels.md`
 - `check-skills.cjs` 已修「不要用」列误报（G-0018，方案 a）：该列的弃用名不算 missing、不影响退出码
+- token 规则已更新（2026-10-22）：一任务一会话、handoff 只读现状节、task-log 只 grep、开工记会话 ID。已写入配置包与英创、VoiceBuilder 的 `AGENTS.md`。**尚未在新会话里验证执行效果**；英创和 VoiceBuilder 的 handoff 仍然很长，未瘦身
 
 ## 待办（按优先级）
 
